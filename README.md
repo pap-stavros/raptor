@@ -1,6 +1,6 @@
 # Raptor 🦖
 
-A secure, minimalist TOTP (Time-based One-Time Password) CLI tool that stores secrets in your system keyring.
+**Rust Authenticator Platform for Time-based OTP Retrieval** - A secure, minimalist TOTP CLI tool that stores secrets in your system keyring.
 
 ## Features
 
@@ -9,9 +9,14 @@ A secure, minimalist TOTP (Time-based One-Time Password) CLI tool that stores se
 
 ## Installation
 
+### From crates.io (recommended)
 ```bash
-# Clone and build
-git clone https://github.com/yourusername/raptor.git
+cargo install raptor-cli
+```
+
+### From source
+```bash
+git clone https://github.com/pap-stavros/raptor.git
 cd raptor
 cargo install --path .
 ```
@@ -54,7 +59,7 @@ raptor code github --algorithm sha256 --digits 8 --period 60
 
 ## Roadmap
 
-- [ ] Clipboard integration (`--copy` flag)
+- [ ] Clipboard integration
 - [ ] QR code import from images
 - [ ] Export functionality for backups
 - [ ] Fuzzy search for account names
