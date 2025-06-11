@@ -4,11 +4,8 @@ A secure, minimalist TOTP (Time-based One-Time Password) CLI tool that stores se
 
 ## Features
 
-- **Secure storage** - Uses system keyring (no plaintext files)
-- **Privacy-focused** - Never displays all codes at once
-- **Cross-platform** - Works on Windows, macOS, and Linux
+- **Secure storage** - Uses system keyring
 - **Flexible** - Supports SHA1/SHA256/SHA512, custom digits/periods
-- **Simple** - Clean CLI interface, no GUI bloat
 
 ## Installation
 
