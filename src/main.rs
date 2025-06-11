@@ -3,12 +3,12 @@ use base32::Alphabet;
 use clap::{Parser, Subcommand};
 use dirs::config_dir;
 use keyring::Entry;
+use std::io::{self};
 use std::{
     fs::{self, OpenOptions},
     io::{BufRead, BufReader, Write},
     path::PathBuf,
 };
-use std::io::{self};
 
 use totp_rs::{Algorithm, TOTP};
 
@@ -136,7 +136,10 @@ fn warn_about_algorithm(algorithm: Algorithm) {
                 Algorithm::SHA512 => "SHA512",
                 _ => unreachable!(),
             };
-            eprintln!("Warning: Using {}. Some authenticators may silently fall back to SHA1.", algo_name);
+            eprintln!(
+                "Warning: Using {}. Some authenticators may silently fall back to SHA1.",
+                algo_name
+            );
         }
         _ => {}
     }
@@ -147,7 +150,11 @@ fn main() -> anyhow::Result<()> {
     let service = "raptor";
 
     match cli.command {
-        Commands::Add { account, secret, custom } => {
+        Commands::Add {
+            account,
+            secret,
+            custom,
+        } => {
             // Validate Base32 + length ≥128 bits
             let key = decode_secret(&secret).context("invalid Base32 secret")?;
             if key.len() < 16 {
@@ -169,7 +176,9 @@ fn main() -> anyhow::Result<()> {
                 println!("Configuring TOTP for {} (custom)", account);
                 println!("-------------------------------------");
 
-                println!("Make sure your platform matches the chosen settings.\nIf you are unsure, press ENTER to use the default values.\n");
+                println!(
+                    "Make sure your platform matches the chosen settings.\nIf you are unsure, press ENTER to use the default values.\n"
+                );
                 // Digits
                 loop {
                     let input = read_line_input(
@@ -177,7 +186,10 @@ fn main() -> anyhow::Result<()> {
                         &digits.to_string(),
                     )?;
                     match input.parse::<usize>() {
-                        Ok(d) if d == 6 || d == 8 => { digits = d; break; }
+                        Ok(d) if d == 6 || d == 8 => {
+                            digits = d;
+                            break;
+                        }
                         _ => println!("  [!] Invalid digits. Please enter 6 or 8."),
                     }
                 }
@@ -188,7 +200,10 @@ fn main() -> anyhow::Result<()> {
                         &period.to_string(),
                     )?;
                     match input.parse::<u64>() {
-                        Ok(p) if p > 0 => { period = p; break; }
+                        Ok(p) if p > 0 => {
+                            period = p;
+                            break;
+                        }
                         _ => println!("  [!] Invalid period. Please enter a positive number."),
                     }
                 }
@@ -199,7 +214,10 @@ fn main() -> anyhow::Result<()> {
                         &skew.to_string(),
                     )?;
                     match input.parse::<u8>() {
-                        Ok(s) => { skew = s; break; }
+                        Ok(s) => {
+                            skew = s;
+                            break;
+                        }
                         _ => println!("  [!] Invalid skew. Please enter a number."),
                     }
                 }
@@ -210,7 +228,10 @@ fn main() -> anyhow::Result<()> {
                         &algorithm_str,
                     )?;
                     match parse_algo(&input) {
-                        Ok(_) => { algorithm_str = input; break; }
+                        Ok(_) => {
+                            algorithm_str = input;
+                            break;
+                        }
                         Err(e) => println!("  [!] {}", e),
                     }
                 }
@@ -219,7 +240,10 @@ fn main() -> anyhow::Result<()> {
 
             // Store the secret and all parameters in a single string in the keyring
             // Format: "secret_base32:algo_name:digits:period:skew"
-            let stored_value = format!("{}:{}:{}:{}:{}", secret, algorithm_str, digits, period, skew);
+            let stored_value = format!(
+                "{}:{}:{}:{}:{}",
+                secret, algorithm_str, digits, period, skew
+            );
 
             Entry::new(service, &account)?
                 .set_password(&stored_value)
@@ -252,7 +276,9 @@ fn main() -> anyhow::Result<()> {
 
                 warn_about_algorithm(totp.algorithm);
 
-                let code = totp.generate_current().context("generating code from URI")?;
+                let code = totp
+                    .generate_current()
+                    .context("generating code from URI")?;
                 println!("Code for {}: {}", account, code);
             } else {
                 // Otherwise, use stored secret with ALL its associated parameters
@@ -263,7 +289,11 @@ fn main() -> anyhow::Result<()> {
                 // Parse the stored value back into secret and parameters
                 let parts: Vec<&str> = stored_value.split(':').collect();
                 if parts.len() != 5 {
-                    anyhow::bail!("Malformed stored secret for '{}'. Try removing and re-adding it with `raptor-cli add {} <secret> [--custom]`", account, account);
+                    anyhow::bail!(
+                        "Malformed stored secret for '{}'. Try removing and re-adding it with `raptor-cli add {} <secret> [--custom]`",
+                        account,
+                        account
+                    );
                 }
 
                 let s_secret_str = parts[0];
@@ -273,7 +303,8 @@ fn main() -> anyhow::Result<()> {
                 let skew: u8 = parts[4].parse().context("invalid stored skew")?;
 
                 // Decode the secret bytes
-                let secret_bytes = decode_secret(s_secret_str).context("invalid Base32 secret in keyring")?;
+                let secret_bytes =
+                    decode_secret(s_secret_str).context("invalid Base32 secret in keyring")?;
 
                 // Validate parameters (should be valid if added correctly, but good for defensive programming)
                 if digits != 6 && digits != 8 {
