@@ -1,4 +1,4 @@
-# Raptor 🦖
+# raptor-cli 🦖
 
 **Rust Authenticator Platform for Time-based OTP Retrieval** - A secure, minimalist TOTP CLI tool that stores secrets in your system keyring.
 
@@ -25,29 +25,29 @@ cargo install --path .
 
 ### Add a new account
 ```bash
-raptor add github JBSWY3DPEHPK3PXP
+raptor-cli add github JBSWY3DPEHPK3PXP
 ```
 
 ### Generate a code
 ```bash
-raptor code github
+raptor-cli code github
 # Output: Code for github: 123456
 ```
 
 ### List accounts
 ```bash
-raptor list
+raptor-cli list
 ```
 
 ### Remove an account
 ```bash
-raptor remove github
+raptor-cli remove github
 ```
 
 ### Advanced options
 ```bash
 # Custom algorithm, digits, period
-raptor code github --algorithm sha256 --digits 8 --period 60
+raptor-cli code github --algorithm sha256 --digits 8 --period 60
 ```
 
 ## Security
