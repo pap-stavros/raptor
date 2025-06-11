@@ -89,7 +89,7 @@ fn index_remove(account: &str) -> anyhow::Result<()> {
     }
     let lines: Vec<_> = BufReader::new(fs::File::open(&path)?)
         .lines()
-        .filter_map(Result::ok)
+        .map_while(Result::ok) // Updated based on Clippy suggestion
         .filter(|l| l.trim() != account)
         .collect();
     fs::write(&path, lines.join("\n") + "\n")?;
