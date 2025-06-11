@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context};
+use anyhow::{Context, anyhow};
 use base32::Alphabet;
 use clap::{Parser, Subcommand};
 use dirs::config_dir;
@@ -20,14 +20,9 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     /// Store a new Base32-encoded secret (length ≥128 bits)
-    Add {
-        account: String,
-        secret: String,
-    },
+    Add { account: String, secret: String },
     /// Delete a stored secret
-    Remove {
-        account: String,
-    },
+    Remove { account: String },
     /// List stored accounts
     List,
     /// Generate the current TOTP code for an account
@@ -55,7 +50,7 @@ fn parse_algo(s: &str) -> Result<Algorithm, anyhow::Error> {
 fn decode_secret(s: &str) -> Result<Vec<u8>, anyhow::Error> {
     // Remove spaces and convert to uppercase
     let cleaned = s.replace(' ', "").to_uppercase();
-    
+
     base32::decode(Alphabet::Rfc4648 { padding: true }, &cleaned)
         .or_else(|| base32::decode(Alphabet::Rfc4648 { padding: false }, &cleaned))
         .ok_or_else(|| anyhow!("invalid Base32 secret"))
@@ -154,11 +149,9 @@ fn main() -> anyhow::Result<()> {
             let secret_str = Entry::new(service, &account)?
                 .get_password()
                 .context("no secret found for that account")?;
-            let key = decode_secret(&secret_str)
-                .context("invalid Base32 secret in keyring")?;
+            let key = decode_secret(&secret_str).context("invalid Base32 secret in keyring")?;
             let algo = parse_algo(&algorithm)?;
-            let totp = TOTP::new(algo, digits, 1, period, key)
-                .context("configuring TOTP")?;
+            let totp = TOTP::new(algo, digits, 1, period, key).context("configuring TOTP")?;
             let code = totp.generate_current().context("generating code")?;
             println!("Code for {}: {}", account, code);
         }
