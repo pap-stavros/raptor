@@ -1,5 +1,5 @@
 [package]
-name = "raptor"
+name = "raptor-cli"
 version = "0.1.0"
 edition = "2024"
 description = "Rust Authenticator Platform for Time-based OTP Retrieval"
