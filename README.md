@@ -5,6 +5,7 @@
 ## Features
 
 - **Secure storage** - Uses system keyring
+- **Multiplatform** - Supports Windows/MacOS/Linux
 - **Flexible** - Supports SHA1/SHA256/SHA512, custom digits/periods
 
 ## Installation
@@ -60,7 +61,6 @@ raptor-cli code github --algorithm sha256 --digits 8 --period 60
 ## Roadmap
 
 - [ ] Clipboard integration
-- [ ] QR code import from images
 - [ ] Export functionality for backups
 - [ ] Fuzzy search for account names
 - [ ] Time remaining display
