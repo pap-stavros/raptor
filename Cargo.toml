@@ -1,0 +1,17 @@
+[package]
+name = "raptor"
+version = "0.1.0"
+edition = "2024"
+description = "Rust Authenticator Platform for Time-based OTP Retrieval"
+repository = "https://github.com/pap-stavros/raptor"
+license = "MIT"
+keywords = ["totp", "2fa", "cli", "security"]
+categories = ["command-line-utilities", "authentication"]
+
+[dependencies]
+anyhow = "1.0"
+base32 = "0.5"
+totp-rs = "5.0"
+keyring = "2.0"
+clap = { version = "4.0", features = ["derive"] }
+dirs = "5.0"
