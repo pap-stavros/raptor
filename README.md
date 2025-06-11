@@ -61,6 +61,7 @@ raptor-cli code github --algorithm sha256 --digits 8 --period 60
 ## Roadmap
 
 - [ ] Clipboard integration
+- [ ] Customizable config file
 - [ ] Export functionality for backups
 - [ ] Fuzzy search for account names
 - [ ] Time remaining display
