@@ -2,11 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - dev  # <-- ADDED dev branch here
     paths-ignore:
       - README.md
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - dev  # <-- ADDED dev branch here (for PRs targeting dev)
     paths-ignore:
       - README.md
 
@@ -21,12 +25,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: ${{ matrix.rust }}
-    
+
     - name: Cache cargo
       uses: actions/cache@v3
       with:
@@ -35,16 +39,16 @@ jobs:
           ~/.cargo/git
           target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    
+
     - name: Build
       run: cargo build --verbose
-    
+
     - name: Run tests
       run: cargo test --verbose
-    
+
     - name: Check formatting
       run: cargo fmt -- --check
-    
+
     - name: Run clippy
       run: cargo clippy -- -D warnings
 
