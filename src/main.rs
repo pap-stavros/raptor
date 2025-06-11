@@ -53,8 +53,11 @@ fn parse_algo(s: &str) -> Result<Algorithm, anyhow::Error> {
 
 /// Try Base32 decode with padding=true, then padding=false.
 fn decode_secret(s: &str) -> Result<Vec<u8>, anyhow::Error> {
-    base32::decode(Alphabet::Rfc4648 { padding: true }, s)
-        .or_else(|| base32::decode(Alphabet::Rfc4648 { padding: false }, s))
+    // Remove spaces and convert to uppercase
+    let cleaned = s.replace(' ', "").to_uppercase();
+    
+    base32::decode(Alphabet::Rfc4648 { padding: true }, &cleaned)
+        .or_else(|| base32::decode(Alphabet::Rfc4648 { padding: false }, &cleaned))
         .ok_or_else(|| anyhow!("invalid Base32 secret"))
 }
 
