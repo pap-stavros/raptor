@@ -1,6 +1,6 @@
 [package]
 name = "raptor-cli"
-version = "0.1.2"
+version = "0.1.9"
 edition = "2024"
 description = "Rust Authenticator Platform for Time-based OTP Retrieval"
 repository = "https://github.com/pap-stavros/raptor"
@@ -11,7 +11,7 @@ categories = ["command-line-utilities", "authentication"]
 [dependencies]
 anyhow = "1.0"
 base32 = "0.5"
-totp-rs = "5.0"
+totp-rs = { version = "5", features = ["otpauth"] }
 keyring = "2.0"
 clap = { version = "4.0", features = ["derive"] }
 dirs = "5.0"
